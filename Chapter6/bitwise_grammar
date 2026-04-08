@@ -1,0 +1,51 @@
+Grammar:
+! - not
+~ - complement
+| - or
+& - and
+^ - exclusive
+
+order:
+1. ^ > |
+2. & > ^
+
+PRIMARY
+SECONDARY
+TERTIARY
+
+! ~ |- TERTIARY
+^ - SECONDARY
+& - PRIMARY
+
+GRAMMAR
+=========
+
+Expression:
+    OrExpression
+OrExpression:
+    XorExpression
+    OrExpression "|" XorExpression
+XorExpression:
+    AndExpression
+    XorExpression "^" AndExpression
+AndExpression:
+    UnaryExpression
+    AndExpression "&" UnaryExpression
+UnaryExpression:
+    Primary
+    "!" UnaryExpression
+    "~" UnaryExpression
+Primary:
+    NUMBER
+    "(" Expression ")"
+
+
+int xor_expression()
+{
+    int left = and_expression();
+    while(current_token.kind == "^"){
+        get_token();
+        left ^= and_expression();
+    }
+    return left;
+}
