@@ -167,36 +167,54 @@ namespace Chrono {
         return day;
     }
 
-    Date check_date(const Date d){
+    Date next_Sunday(const Date d)
+    {
+        // days of the month
+        int months[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-        int day = d.day();
-        Date::Month month = d.month();
+        Day day = day_of_week(d);
 
-        if(day > 31){
-
-        }
-
-        cout << "Checking date..." << endl;
-
-        return d;
-    }
-  
-
-    Date next_Sunday(const Date d){
-       Day day = day_of_week(d);
+        // check how many days till next sunday
         int n = 6;
         n -= day;
-        if(n == 0){
-            n = 7;
+        if (n == 0)
+        {
+            n = 6;
         }
-        
-       int newDay = d.day() + n;
-       Date newDate = Date(d.year(), d.month(), newDay); 
-    
 
-       cout << "Next Sunday is: " << endl;
-       return check_date(newDate);
-        
+        int newDay = d.day() + n;
+        Date::Month m = d.month();
+        int monthIndex = static_cast<int>(m) - 1;
+        int nextMonth = monthIndex;
+        int year = 0;
+
+        while (newDay > months[nextMonth])
+        {
+            if (nextMonth == 1 && leapyear(d.year()))
+            {
+                    newDay -= 29;
+                    cout << "Leap year";
+            }
+            else
+            {
+                newDay -= months[nextMonth];
+            }
+            nextMonth++;
+            
+            if (nextMonth > 11)
+            {
+                nextMonth = 0;
+                year++;
+            }
+        }
+
+        Date::Month newMonth = static_cast<Date::Month>(nextMonth + 1);
+        int newYear = d.year() + year;
+
+        Date newDate = Date(newYear, newMonth, newDay);
+
+        cout << "Next Sunday is: " << endl;
+        return newDate;
     }
 
     Date next_weekday(const Date& d){
@@ -206,7 +224,7 @@ namespace Chrono {
 
 int main()
 {
-    Chrono::Date today(2026, Chrono::Date::Month::jun, 28);
+    Chrono::Date today(2028, Chrono::Date::Month::feb, 28);
     cout << today << endl;
  //   cout << day_of_week(today) << endl;
  //   cout << next_weekday(today) << endl;

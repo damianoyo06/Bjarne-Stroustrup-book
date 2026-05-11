@@ -55,7 +55,6 @@ namespace Chrono
          monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday
     };
     Day day_of_week(const Date& d);
-    Date check_date(const Date d);
     Date next_Sunday(const Date d);
     Date next_weekday(const Date& d);
 }
