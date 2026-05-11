@@ -183,6 +183,7 @@ namespace Chrono {
         }
 
         int newDay = d.day() + n;
+       
         Date::Month m = d.month();
         int monthIndex = static_cast<int>(m) - 1;
         int nextMonth = monthIndex;
@@ -190,15 +191,7 @@ namespace Chrono {
 
         while (newDay > months[nextMonth])
         {
-            if (nextMonth == 1 && leapyear(d.year()))
-            {
-                    newDay -= 29;
-                    cout << "Leap year";
-            }
-            else
-            {
-                newDay -= months[nextMonth];
-            }
+            newDay -= months[nextMonth];
             nextMonth++;
             
             if (nextMonth > 11)
@@ -218,18 +211,54 @@ namespace Chrono {
     }
 
     Date next_weekday(const Date& d){
-         return {1990, Date::Month::may, 12};
+        int months[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        Day day = day_of_week(d);
+        int newDay = 0;
+        if(day < 4 || day == 6){
+            newDay = d.day() + 1;
+        } else if ( day == 5) {
+            newDay = d.day() + 2;
+        } else if (day == 4){
+            newDay = d.day() + 3;
+        }
+        
+        //----start of same as sunday
+         Date::Month m = d.month();
+        int monthIndex = static_cast<int>(m) - 1;
+        int nextMonth = monthIndex;
+        int year = 0;
+
+        while (newDay > months[nextMonth])
+        {
+            newDay -= months[nextMonth];
+            nextMonth++;
+            
+            if (nextMonth > 11)
+            {
+                nextMonth = 0;
+                year++;
+            }
+        }
+
+        Date::Month newMonth = static_cast<Date::Month>(nextMonth + 1);
+        int newYear = d.year() + year;
+
+        Date newDate = Date(newYear, newMonth, newDay);
+        //------------------- same as nextSunday
+
+
+        cout<< "next weekday: " << endl;
+         return newDate;
     }
 }
 
 int main()
 {
-    Chrono::Date today(2028, Chrono::Date::Month::feb, 28);
+
+    Chrono::Date today(2028, Chrono::Date::Month::feb, 29);
     cout << today << endl;
- //   cout << day_of_week(today) << endl;
- //   cout << next_weekday(today) << endl;
     cout << next_Sunday(today) << endl;
- //   cout << number_of_days(today) << endl;
- //   cout << Chrono::no_leapyears(2026) << endl;
+    cout << next_weekday(today) << endl;
     
 }
